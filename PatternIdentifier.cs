@@ -19,10 +19,10 @@ namespace FilePatternIdentifier
 
             return buffer;
         }
+
         // Prints the filename and first n_bytes of each file located in root_path.
-        public void IdentifyPatterns(string root_path, int n_bytes)
+        private void printFilePatternInfo(string [] filePaths, int n_bytes)
         {
-            string [] filePaths = Directory.GetFiles(root_path, "", SearchOption.TopDirectoryOnly);
             foreach (string file_path in filePaths)
             {
                 byte[] buffer = getBytes(file_path, n_bytes);
@@ -32,7 +32,23 @@ namespace FilePatternIdentifier
                 Console.WriteLine(fileInfo.Name + ": " + hex_string);
             }
         }
+        
+        public void IdentifyPatterns(string root_path, int n_bytes)
+        {
+            try
+            {
+                string[] filePaths = Directory.GetFiles(root_path, "", SearchOption.TopDirectoryOnly);
+                printFilePatternInfo(filePaths, n_bytes);
+                
+            }
+            catch (DirectoryNotFoundException)
+            {
+                Console.WriteLine(String.Format("The entered path: {0} is not a valid directory.", root_path));
+                Console.WriteLine("Press enter to exit the program...");
+                Console.ReadLine();
+                System.Environment.Exit(1);
+            }
+            
+        }
     }
-
-    
 }
